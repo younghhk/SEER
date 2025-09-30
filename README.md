@@ -36,7 +36,7 @@ Rate ratios compare IBM rates across groups (e.g., sex, race, calendar period).
     Fay MP, Tiwari RC, Feuer EJ, Zou Z. *Estimating average annual percent change for disease rates without assuming constant change.*  
     Biometrics. 2006; 62(3):847–854.
 
-- [R code](SEER/IBM.R)
+- [R code](IBM.R)
 
 
 ---
@@ -45,7 +45,16 @@ Rate ratios compare IBM rates across groups (e.g., sex, race, calendar period).
 
 ```r
 # Load functions
-source("NCI/IBM.R")
+source("IBM.R")
+
+# Install package if needed
+install.packages("readxl")
+
+# Load the library
+library(readxl)
+
+# Read the Excel file
+df <- read_excel("age_adjusted_data_grace.xlsx")
 
 # Example: Compute IBM rate with Fay–Feuer method
 ibm_rate <- compute_dsr_and_rr_for_subset(
