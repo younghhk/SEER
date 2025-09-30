@@ -36,7 +36,7 @@ Rate ratios compare IBM rates across groups (e.g., sex, race, calendar period).
     Fay MP, Tiwari RC, Feuer EJ, Zou Z. *Estimating average annual percent change for disease rates without assuming constant change.*  
     Biometrics. 2006; 62(3):847–854.
 
-- [R code](NCI/IBM.R)
+- [R code](SEER/IBM.R)
 
 
 ---
