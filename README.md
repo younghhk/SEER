@@ -56,3 +56,8 @@ ibm_rate <- compute_dsr_and_rr_for_subset(
   ci_method = "fayfeuer"
 )
 ```
+## ℹ️ Project Info
+
+- **Last Updated:** September 29, 2025  
+- **Contact:** [grace.hong@nih.gov](mailto:grace.hong@nih.gov) (please reach out with questions or issues)  
+- **Main Repository:** [younghhk/NCI](https://github.com/younghhk/NCI)  
