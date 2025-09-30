@@ -56,14 +56,32 @@ library(readxl)
 # Read the Excel file
 df <- read_excel("age_adjusted_data_grace.xlsx")
 
-# Example: Compute IBM rate with Fay–Feuer method
-ibm_rate <- compute_dsr_and_rr_for_subset(
-  df, idx1, idx2,
-  "ER- & NHW & 30-54",
-  "ER- & NHB & 30-54",
-  "Subset",
-  ci_method = "fayfeuer"
-)
+
+# Define index sets for comparison:
+# Example: ER-negative, Non-Hispanic White vs Non-Hispanic Black, age 30–54
+idx1 <- which(df$ER == "Negative" &
+                df$Race == "Non-Hispanic White" &
+                df$age_group_strata == "30 - 54")
+
+idx2 <- which(df$ER == "Negative" &
+                df$Race == "Non-Hispanic Black" &
+                df$age_group_strata == "30 - 54")
+
+# Compute DSRs and rate ratio with Fay–Feuer CI
+compute_dsr_and_rr_for_subset(df, idx1, idx2,
+                              "ER- & NHW & 30-54",
+                              "ER- & NHB & 30-54",
+                              "Subset",
+                              ci_method = "fayfeuer")
+
+# Compute DSRs and rate ratio with Tiwari CI
+compute_dsr_and_rr_for_subset(df, idx1, idx2,
+                              "ER- & NHW & 30-54",
+                              "ER- & NHB & 30-54",
+                              "Subset",
+                              ci_method = "tiwari")
+
+
 
 ####################################################
 # Output interpretation
