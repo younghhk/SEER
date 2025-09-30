@@ -64,6 +64,39 @@ ibm_rate <- compute_dsr_and_rr_for_subset(
   "Subset",
   ci_method = "fayfeuer"
 )
+
+####################################################
+# Output interpretation
+####################################################
+
+# The function returns a list with two elements:
+#
+# 1) $rates : Group-specific age-adjusted incidence-based mortality (IBM) rates
+#    - DSR (Directly Standardized Rate) is computed per unit population,
+#      then scaled to "Rate_per1e5" (per 100,000 people).
+#    - CI_low and CI_high give the 95% confidence interval for the rate.
+#
+# Interpretation of Rates:
+#   - The "Rate_per1e5" column represents the IBM rate per 100,000 people,
+#     adjusted for age using standard weights.
+#   - Higher rates indicate a greater burden of mortality linked to cancer incidence.
+#   - The confidence interval (CI_low, CI_high) reflects statistical uncertainty.
+#     Narrow intervals mean more precision; wide intervals occur with smaller samples.
+#
+# 2) $rr_of_dsrs : Rate ratio results (comparison of two groups)
+#    - Estimate is the ratio of Group2's IBM rate to Group1's IBM rate.
+#    - CI_low and CI_high give the 95% confidence interval for the RR.
+#
+# Interpretation of Rate Ratios (RR):
+#   - RR = 1.0 → The two groups have the same IBM rate.
+#   - RR > 1.0 → Group2 has a higher IBM rate than Group1.
+#   - RR < 1.0 → Group2 has a lower IBM rate than Group1.
+#
+# Example:
+#   Suppose Group1 has Rate_per1e5 = 3.0 and Group2 has Rate_per1e5 = 6.6.
+#   Then RR ≈ 2.2, meaning Group2’s IBM rate is about 2.2 times higher than Group1’s.
+#   If the CI does not include 1.0, the difference is statistically significant.
+
 ```
 ## ℹ️ Project Info
 
