@@ -116,8 +116,12 @@ compute_dsr_and_rr_for_subset(df, idx1, idx2,
 #   If the CI does not include 1.0, the difference is statistically significant.
 
 ```
-## ℹ️ Project Info
+## 🔒 Repository Access
 
-- **Last Updated:** September 29, 2025  
-- **Contact:** [grace.hong@nih.gov](mailto:grace.hong@nih.gov) (please reach out with questions or issues)  
-- **Main Repository:** [younghhk/NCI](https://github.com/younghhk/NCI)  
+SEER is restricted to collaborators. To request access, please contact:
+
+**Grace Hong**  
+📧 [grace.hong@nih.gov](mailto:grace.hong@nih.gov)
+
+*Tip: Include your GitHub username and affiliation in your request.*
+
