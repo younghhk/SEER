@@ -1,127 +1,166 @@
+
+> 🧬 **For additional cancer research software and tools**, visit  
+> [NCI Cancer Research Software Repository](https://github.com/younghhk/NCI)
+
+
 # SOFTWARE for SEER Cancer Data Analysis
+### Compute **Incidence-Based Mortality (IBM)** Rates and **Rate Ratios (RRs)** in R
 
-## Incidence-Based Mortality (IBM) Rate and Rate Ratio
+This repository provides R functions to estimate **Incidence-Based Mortality (IBM) rates** and **Rate Ratios (RRs)** using tabulated data formatted like those from the **Surveillance, Epidemiology, and End Results (SEER) Program** of the U.S. National Cancer Institute.
 
-This repository provides R functions to compute **Incidence-Based Mortality (IBM) rates** and **rate ratios**.  
-The methods include adjustments for small-count bias and variance estimation, making them suitable for rare cancers and small populations.
+🔗 **Learn more about SEER:** [https://seer.cancer.gov/](https://seer.cancer.gov/)
 
----
 
-##  IBM Rate
-The **IBM rate** links deaths to incident cancer cases in the registry.  
-Adjustments for small counts are available:
-- **Fay–Feuer method** (recommended for rare events)  
-- **Tiwari’s modification** (alternative adjustment)  
 
-Rates can be age-adjusted if needed.
 
----
 
-##  Rate Ratios
-Rate ratios compare IBM rates across groups (e.g., sex, race, calendar period).  
-- Variances are estimated with the **Delta method**, which approximates the standard error of the log rate ratio.  
-- Confidence intervals are computed on the log scale and then exponentiated.
+## ✨ Features
 
----
+- Compute **Incidence-Based Mortality (IBM) rates**, which are calculated by **identifying deaths among patients previously diagnosed with cancer** in population-based registries (e.g., [SEER](https://seer.cancer.gov/)).  
+  This method connects each death back to its **original cancer diagnosis**, allowing mortality to be analyzed by characteristics recorded at diagnosis (e.g., stage, age, or race/ethnicity).
 
-##  Resources
+- Adjust IBM estimates for **small-count bias**, which can occur when cancer deaths or cases are rare within strata (e.g., by age, race, or calendar year):
 
-- [Age-adjusted Rate Confidence Intervals (SEER Documentation)](https://seer.cancer.gov/help/seerstat/equations-and-algorithms/rate-algorithms)
+  - **Fay–Feuer method (1997)** – applies a **gamma-based approximation** to construct confidence intervals for directly standardized rates.  
+    It performs well for **very sparse data** (e.g., small numbers of deaths) and is the **standard SEER approach** for rare-event analyses.
 
-- **Rate Ratios**  
-  - Confidence interval formula:  
-    Fay MP. *Approximate confidence intervals for rate ratios from directly standardized rates with sparse data.*  
-    Communications in Statistics: Theory and Methods. 1999; 28(9):2141–2160.  
-  - P-value formula:  
-    Fay MP, Tiwari RC, Feuer EJ, Zou Z. *Estimating average annual percent change for disease rates without assuming constant change.*  
-    Biometrics. 2006; 62(3):847–854.
+  - **Tiwari modification (2006)** – a **refined version** of Fay–Feuer that adjusts the gamma limits for **better coverage accuracy** when sample sizes are **moderate** rather than extremely small.  
 
-- [R code](IBM.R)
 
+- Estimate **Rate Ratios (RRs)** to compare IBM rates between groups (e.g., **Non-Hispanic White vs. Non-Hispanic Black**) with appropriate **variance and confidence interval** calculations based on the Delta method.
+
+- Fully compatible with **SEER-style tabulated data** (age-adjusted or age-specific rates) and designed for reproducibility in **R**.
+
+
+
+## 📦 Files
+- `IBM.R` — main functions for IBM rate and rate ratio estimation  
+- `age_adjusted_data_grace.xlsx` — example dataset layout (age-stratified SEER-like data)
+
+
+
+## Method Overview
+
+### Incidence-Based Mortality (IBM) Rate
+The **IBM rate** links deaths to cancer **incidence**, not the general population, providing insight into outcomes among diagnosed individuals.
+
+Formally,  
+
+`IBM Rate = (Deaths among incident cases / Person-years among incident cases) × 100,000`
+
+This expresses the number of deaths among newly diagnosed (incident) cancer cases per 100,000 person-years of observation.
+
+
+Adjustments for small sample sizes can be made using:
+- **Fay–Feuer method** (recommended for rare cancers)
+- **Tiwari’s modification** (for slightly larger samples)
+
+
+### Rate Ratios (RR)
+The **Rate Ratio (RR)** compares the IBM rates between two groups — for example,  
+**Group 1:** Non-Hispanic White,  
+**Group 2:** Non-Hispanic Black.
+
+
+`RR = (IBM Rate of Group 2) / (IBM Rate of Group 1)`
+
+- The variance of `log(RR)` is approximated using the **Delta method**.  
+- 95% CIs are computed on the log scale and exponentiated back.
+
+**Interpretation:**
+- RR = 1 → no difference in IBM rates between groups  
+- RR > 1 → Group 2 has a higher IBM rate  
+- RR < 1 → Group 2 has a lower IBM rate  
+
+
+
+## 🔗 References
+- **Age-adjusted rate confidence intervals (SEER Documentation):**  
+  [SEER Rate Algorithms](https://seer.cancer.gov/help/seerstat/equations-and-algorithms/rate-algorithms)
+
+- **Rate Ratio Methods:**  
+  Fay, M. P. (1999). *Approximate confidence intervals for rate ratios from directly standardized rates with sparse data.*  
+  *Communications in Statistics: Theory and Methods*, **28**(9), 2141–2160.  
+
+  Fay, M. P., Tiwari, R. C., Feuer, E. J., & Zou, Z. (2006). *Estimating average annual percent change for disease rates without assuming constant change.*
+   *Biometrics*, **62**(3), 847–854.
 
 ---
 
 ##  Example Usage
 
 ```r
-# Load functions
+# 1. Load the function file
 source("IBM.R")
 
-# Install package if needed
+# 2. Install dependencies
 install.packages("readxl")
-
-# Load the library
 library(readxl)
 
-# Read the Excel file
+# 3. Read age-stratified data
 df <- read_excel("age_adjusted_data_grace.xlsx")
 
-
-# Define index sets for comparison:
+# 4. Define two comparison groups
 # Example: ER-negative, Non-Hispanic White vs Non-Hispanic Black, age 30–54
 idx1 <- which(df$ER == "Negative" &
-                df$Race == "Non-Hispanic White" &
-                df$age_group_strata == "30 - 54")
+              df$Race == "Non-Hispanic White" &
+              df$age_group_strata == "30 - 54")
 
 idx2 <- which(df$ER == "Negative" &
-                df$Race == "Non-Hispanic Black" &
-                df$age_group_strata == "30 - 54")
+              df$Race == "Non-Hispanic Black" &
+              df$age_group_strata == "30 - 54")
 
-# Compute DSRs and rate ratio with Fay–Feuer CI
-compute_dsr_and_rr_for_subset(df, idx1, idx2,
-                              "ER- & NHW & 30-54",
-                              "ER- & NHB & 30-54",
-                              "Subset",
-                              ci_method = "fayfeuer")
+# 5. Compute IBM rates and RR using Fay–Feuer method
+res_ff <- compute_dsr_and_rr_for_subset(
+  df, idx1, idx2,
+  label1 = "ER- & NHW & 30–54",
+  label2 = "ER- & NHB & 30–54",
+  set_name = "Subset",
+  ci_method = "fayfeuer"
+)
 
-# Compute DSRs and rate ratio with Tiwari CI
-compute_dsr_and_rr_for_subset(df, idx1, idx2,
-                              "ER- & NHW & 30-54",
-                              "ER- & NHB & 30-54",
-                              "Subset",
-                              ci_method = "tiwari")
+# 6. Optionally, compute using Tiwari CI
+res_ti <- compute_dsr_and_rr_for_subset(
+  df, idx1, idx2,
+  label1 = "ER- & NHW & 30–54",
+  label2 = "ER- & NHB & 30–54",
+  set_name = "Subset",
+  ci_method = "tiwari"
+)
 
-
-
-####################################################
-# Output interpretation
-####################################################
-
-# The function returns a list with two elements:
-#
-# 1) $rates : Group-specific age-adjusted incidence-based mortality (IBM) rates
-#    - DSR (Directly Standardized Rate) is computed per unit population,
-#      then scaled to "Rate_per1e5" (per 100,000 people).
-#    - CI_low and CI_high give the 95% confidence interval for the rate.
-#
-# Interpretation of Rates:
-#   - The "Rate_per1e5" column represents the IBM rate per 100,000 people,
-#     adjusted for age using standard weights.
-#   - Higher rates indicate a greater burden of mortality linked to cancer incidence.
-#   - The confidence interval (CI_low, CI_high) reflects statistical uncertainty.
-#     Narrow intervals mean more precision; wide intervals occur with smaller samples.
-#
-# 2) $rr_of_dsrs : Rate ratio results (comparison of two groups)
-#    - Estimate is the ratio of Group2's IBM rate to Group1's IBM rate.
-#    - CI_low and CI_high give the 95% confidence interval for the RR.
-#
-# Interpretation of Rate Ratios (RR):
-#   - RR = 1.0 → The two groups have the same IBM rate.
-#   - RR > 1.0 → Group2 has a higher IBM rate than Group1.
-#   - RR < 1.0 → Group2 has a lower IBM rate than Group1.
-#
-# Example:
-#   Suppose Group1 has Rate_per1e5 = 3.0 and Group2 has Rate_per1e5 = 6.6.
-#   Then RR ≈ 2.2, meaning Group2’s IBM rate is about 2.2 times higher than Group1’s.
-#   If the CI does not include 1.0, the difference is statistically significant.
-
+# View results
+res_ff$rates       # IBM rates (per 100,000) with CI for each group
+res_ff$rr_of_dsrs  # RR and CI comparing the two groups
 ```
-## 🔒 Repository Access
 
-SEER is restricted to collaborators. To request access, please contact:
+## 📊 Output Interpretation
+
+### `$rates`
+
+| **Field** | **Description** |
+|------------|----------------|
+| `Rate_per1e5` | Age-adjusted Incidence-Based Mortality (IBM) rate per 100,000 persons |
+| `CI_low` / `CI_high` | 95% confidence interval limits |
+| Interpretation | Higher values indicate a greater mortality burden among incident cancer cases |
+
+
+
+### `$rr_of_dsrs`
+
+| **Field** | **Description** |
+|------------|----------------|
+| `Estimate` | Rate Ratio (RR) = (IBM rate of Group 2) / (IBM rate of Group 1) |
+| `CI_low` / `CI_high` | 95% confidence interval for the RR |
+
+---
+
+## 🔒 Access & Contact
+
+SEER data are restricted to authorized collaborators.
+To request access or contribute to related tools, contact:
 
 **Grace Hong**  
 📧 [grace.hong@nih.gov](mailto:grace.hong@nih.gov)
 
-*Tip: Include your GitHub username and affiliation in your request.*
+
 
