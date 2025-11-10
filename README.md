@@ -155,6 +155,13 @@ res_ff$rr_of_dsrs  # RR and CI comparing the two groups
 
 ---
 
+## 📜 Citation
+If you use this code,  please cite the GitHub repository as follows:
+
+Vo, J., & Hong, G. (2025). [Age-Adjusted Incidence-Based Mortality and Rate Ratio for Redistributed SEER Data (Version 1.0.0)](www.github.com/younghh/SEER)
+
+---
+
 ## 🔒 Access & Contact
 
 SEER data are restricted to authorized collaborators.
