@@ -35,34 +35,64 @@ This repository provides R functions to estimate **Age-Adjustd Incidence-Based M
 
 ### Age-Adjusted Incidence-Based Mortality (IBM) Rate
 
-$$
-R'_{\text{IBM}}=\sum_{i=x}^{y}\left(\frac{D_i}{P_i}\right) w_i \times 100{,}000
-$$
+The age-adjusted IBM rate is computed as:
 
-with
+    R'_IBM = Σ_i [ (D_i / P_i) * w_i ] * 100,000
 
-$$
-w_i=\frac{\mathrm{stdpop}_i}{\sum_{j=x}^{y}\mathrm{stdpop}_j}
-$$
+where
 
-**Where:**
-- $D_i$: deaths among incident cancer cases in age group \(i\)  
-- $P_i$: person-years among those incident cases in age group \(i\)  
-- $w_i$: normalized standard-population weight for age group \(i\)
+    w_i = stdpop_i / Σ_j stdpop_j
+
+**Definitions:**
+- `D_i`: deaths among incident cancer cases in age group *i*  
+- `P_i`: person-years among those incident cases in age group *i*  
+- `w_i`: normalized standard-population weight for age group *i*
 
 
-| Concept | SEER Notation | IBM Notation | Description |
-|----------|----------------|--------------|--------------|
-| Event count (cases or deaths) | `count_i` | `D_i` | Number of **deaths among incident cases** in age group *i* |
-| Population at risk | `pop_i` | `P_i` | **Person-years** among incident cancer cases (denominator for the rate) |
-| Standard population weight | `stdpop_i` | `w_i` (after normalization) | Proportion of the standard population represented by age group *i* |
-| Crude rate | `cruderate` | `r_i = D_i / P_i` | Age-specific IBM rate |
-| Age-adjusted rate | `aarate_x–y` | `R' = Σ w_i r_i` | Weighted average of age-specific IBM rates |
+
+### Confidence Intervals for Age-Adjusted Rates
+
+Confidence intervals (CIs) are calculated using SEER’s **Fay–Feuer** or **Tiwari** methods.  
+Both assume Poisson-distributed counts and use the directly standardized rate (DSR) variance:
+
+    v = Σ_i (w_i² × D_i)
 
 
-Adjustments for small sample sizes can be made using:
-- **Fay–Feuer method** – recommended when **event counts are very low or zero in some strata** (common for rare cancers)  
-- **Tiwari’s modification** – performs better when **event counts are small but non-zero**, offering improved confidence interval coverage
+
+#### Fay–Feuer Method (recommended for very small counts)
+
+Identifies the stratum with the largest weight:
+
+    w_m = max(w_i)
+    z = w_m²
+
+Lower and upper confidence limits (using chi-square quantiles):
+
+    Lower = (v / (2 * R')) * χ²(α/2, df = 2 * R'² / v)
+    Upper = ((v + z) / (2 * (R' + w_m))) * χ²(1 - α/2, df = 2 * (R' + w_m)² / (v + z))
+
+
+
+#### Tiwari et al. Modification (for moderate counts)
+
+The Tiwari method replaces the single maximum weight with averages across
+non-zero strata, providing smoother, less conservative confidence intervals:
+
+    w_m = avg(w_i)   # restricted to strata with P_i > 0 or D_i > 0
+    z   = avg(w_i²)
+
+Then apply the same formulas for the lower and upper bounds:
+
+    Lower = (v / (2 * R')) * χ²(α/2, df = 2 * R'² / v)
+    Upper = ((v + z) / (2 * (R' + w_m))) * χ²(1 - α/2, df = 2 * (R' + w_m)² / (v + z))
+
+
+
+### Notes
+
+- Implementation follows SEER’s official documentation:  
+  [SEER*Stat Rate Algorithms](https://seer.cancer.gov/help/seerstat/equations-and-algorithms/rate-algorithms)
+
 
 
 ### Rate Ratios (RR)
