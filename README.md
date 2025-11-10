@@ -17,15 +17,7 @@ This repository provides R functions to estimate **Incidence-Based Mortality (IB
 ## ✨ Features
 
 - Compute **Incidence-Based Mortality (IBM) rates**, which are calculated by **identifying deaths among patients previously diagnosed with cancer** in population-based registries (e.g., [SEER](https://seer.cancer.gov/)).  
-  This method connects each death back to its **original cancer diagnosis**, allowing mortality to be analyzed by characteristics recorded at diagnosis (e.g., stage, age, or race/ethnicity).
-
-- Adjust IBM estimates for **small-count bias**, which can occur when cancer deaths or cases are rare within strata (e.g., by age, race, or calendar year):
-
-  - **Fay–Feuer method (1997)** – applies a **gamma-based approximation** to construct confidence intervals for directly standardized rates.  
-    It performs well for **very sparse data** (e.g., small numbers of deaths) and is the **standard SEER approach** for rare-event analyses.
-
-  - **Tiwari modification (2006)** – a **refined version** of Fay–Feuer that adjusts the gamma limits for **better coverage accuracy** when sample sizes are **moderate** rather than extremely small.  
-
+ 
 
 - Estimate **Rate Ratios (RRs)** to compare IBM rates between groups (e.g., **Non-Hispanic White vs. Non-Hispanic Black**) with appropriate **variance and confidence interval** calculations based on the Delta method.
 
@@ -52,8 +44,8 @@ This expresses the number of deaths among newly diagnosed (incident) cancer case
 
 
 Adjustments for small sample sizes can be made using:
-- **Fay–Feuer method** (recommended for rare cancers)
-- **Tiwari’s modification** (for slightly larger samples)
+- **Fay–Feuer method** – recommended when **event counts are very low or zero in some strata** (common for rare cancers)  
+- **Tiwari’s modification** – performs better when **event counts are small but non-zero**, offering improved confidence interval coverage
 
 
 ### Rate Ratios (RR)
