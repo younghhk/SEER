@@ -1,6 +1,6 @@
 
 > 🧬 **For additional cancer research software and tools**, visit  
-> [NCI Cancer Research Software Repository](https://github.com/younghhk/NCI)
+> [Cancer Research Software Repository](https://github.com/younghhk/NCI)
 
 
 ## IBM-Calc: A Computational Tool for Estimating Age-Standardized Incidence-Based Mortality and Rate Ratio Confidence Intervals
