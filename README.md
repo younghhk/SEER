@@ -3,10 +3,10 @@
 > [NCI Cancer Research Software Repository](https://github.com/younghhk/NCI)
 
 
-# SOFTWARE for SEER Cancer Data Analysis
-### Compute **Age-Adjusted Incidence-Based Mortality (IBM)** Rates and **Rate Ratios (RRs)** in R
+## IBM-Calc: A Computational Tool for Estimating Age-Standardized Incidence-Based Mortality and Rate Ratio Confidence Intervals
 
-This repository provides R functions to estimate **Incidence-Based Mortality (IBM) rates** and **Rate Ratios (RRs)** using tabulated data formatted like those from the **Surveillance, Epidemiology, and End Results (SEER) Program** of the U.S. National Cancer Institute.
+
+This repository provides R functions to estimate **Age-Adjustd Incidence-Based Mortality (IBM) rates** and **Rate Ratios (RRs)** using tabulated data formatted like those from the **Surveillance, Epidemiology, and End Results (SEER) Program** of the U.S. National Cancer Institute.
 
 🔗 **Learn more about SEER:** [https://seer.cancer.gov/](https://seer.cancer.gov/)
 
