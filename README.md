@@ -95,7 +95,7 @@ The **Rate Ratio (RR)** compares the IBM rates between two groups — for exampl
 source("IBM.R")
 
 # 2. Install dependencies
-install.packages("readxl")
+#install.packages("readxl")
 library(readxl)
 
 # 3. Read age-stratified data
@@ -111,47 +111,25 @@ idx2 <- which(df$ER == "Negative" &
               df$Race == "Non-Hispanic Black" &
               df$age_group_strata == "30 - 54")
 
-# 5. Compute IBM rates and RR using Fay–Feuer method
-res_ff <- compute_dsr_and_rr_for_subset(
-  df, idx1, idx2,
-  label1 = "ER- & NHW & 30–54",
-  label2 = "ER- & NHB & 30–54",
-  set_name = "Subset",
-  ci_method = "fayfeuer"
+# 5. Compute IBM rates and RR 
+
+out <- compute_ibm_rates_and_ratio(
+  df,
+  idx1 = idx1,
+  idx2 = idx2,
+  label_group1 = "ER- & NHW & 30-54",
+  label_group2 = "ER- & NHB & 30-54",
+  ci_method = "fayfeuer"  # or "tiwari"
 )
 
-# 6. Optionally, compute using Tiwari CI
-res_ti <- compute_dsr_and_rr_for_subset(
-  df, idx1, idx2,
-  label1 = "ER- & NHW & 30–54",
-  label2 = "ER- & NHB & 30–54",
-  set_name = "Subset",
-  ci_method = "tiwari"
-)
+# IBM rates table (per group)
+out$rate
 
-# View results
-res_ff$rates       # IBM rates (per 100,000) with CI for each group
-res_ff$rr_of_dsrs  # RR and CI comparing the two groups
+# Rate ratio table (Group2 / Group1)
+out$rate_ratio
 ```
 
-## 📊 Output Interpretation
 
-### `$rates`
-
-| **Field** | **Description** |
-|------------|----------------|
-| `Rate_per1e5` | Age-adjusted Incidence-Based Mortality (IBM) rate per 100,000 persons |
-| `CI_low`, `CI_high` | 95% confidence interval limits |
-| Interpretation | Higher values indicate a greater mortality burden among incident cancer cases |
-
-
-
-### `$rr_of_dsrs`
-
-| **Field** | **Description** |
-|------------|----------------|
-| `Estimate` | Rate Ratio (RR) = (IBM rate of Group 2) / (IBM rate of Group 1) |
-| `CI_low`, `CI_high` | 95% confidence interval for the RR |
 
 ---
 
