@@ -163,10 +163,10 @@ out$rate_ratio
 
 ---
 
-## 📜 Citation
+## 📜 Author
 If you use this code,  please cite the GitHub repository as follows:
 
-Vo, J., & Hong, G. H. (2025). Age-Adjusted Incidence-Based Mortality and Rate Ratio for Redistributed SEER Data (Version 1.0.0)]. GitHub
+Hong, G. H. and Vo, J. (2025). Age-Adjusted Incidence-Based Mortality and Rate Ratio (Version 1.0.0)]. GitHub
 
 ---
 
