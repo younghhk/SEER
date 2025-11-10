@@ -4,7 +4,7 @@
 
 
 # SOFTWARE for SEER Cancer Data Analysis
-### Compute **Incidence-Based Mortality (IBM)** Rates and **Rate Ratios (RRs)** in R
+### Compute **Age-Adjusted Incidence-Based Mortality (IBM)** Rates and **Rate Ratios (RRs)** in R
 
 This repository provides R functions to estimate **Incidence-Based Mortality (IBM) rates** and **Rate Ratios (RRs)** using tabulated data formatted like those from the **Surveillance, Epidemiology, and End Results (SEER) Program** of the U.S. National Cancer Institute.
 
@@ -14,7 +14,7 @@ This repository provides R functions to estimate **Incidence-Based Mortality (IB
 
 
 
-## ✨ Features
+##  Features
 
 - Compute **Incidence-Based Mortality (IBM) rates**, which are calculated by **identifying deaths among patients previously diagnosed with cancer** in population-based registries (e.g., [SEER](https://seer.cancer.gov/)).  
  
@@ -25,7 +25,7 @@ This repository provides R functions to estimate **Incidence-Based Mortality (IB
 
 
 
-## 📦 Files
+## Files
 - `IBM.R` — main functions for IBM rate and rate ratio estimation  
 - `age_adjusted_data_grace.xlsx` — example dataset layout (age-stratified SEER-like data)
 
@@ -33,14 +33,31 @@ This repository provides R functions to estimate **Incidence-Based Mortality (IB
 
 ## Method Overview
 
-### Incidence-Based Mortality (IBM) Rate
-The **IBM rate** links deaths to cancer **incidence**, not the general population, providing insight into outcomes among diagnosed individuals.
+### Age-Adjusted Incidence-Based Mortality (IBM) Rate
 
-Formally,  
+$$
+R'_{\text{IBM}}=\sum_{i=x}^{y}\left(\frac{D_i}{P_i}\right) w_i \times 100{,}000
+$$
 
-`IBM Rate = (Deaths among incident cases / Person-years among incident cases) × 100,000`
+with
 
-This expresses the number of deaths among newly diagnosed (incident) cancer cases per 100,000 person-years of observation.
+$$
+w_i=\frac{\mathrm{stdpop}_i}{\sum_{j=x}^{y}\mathrm{stdpop}_j}
+$$
+
+**Where:**
+- \(D_i\): deaths among incident cancer cases in age group \(i\)  
+- \(P_i\): person-years among those incident cases in age group \(i\)  
+- \(w_i\): normalized standard-population weight for age group \(i\)
+
+
+| Concept | SEER Notation | IBM Notation | Description |
+|----------|----------------|--------------|--------------|
+| Event count (cases or deaths) | `count_i` | `D_i` | Number of **deaths among incident cases** in age group *i* |
+| Population at risk | `pop_i` | `P_i` | **Person-years** among incident cancer cases (denominator for the rate) |
+| Standard population weight | `stdpop_i` | `w_i` (after normalization) | Proportion of the standard population represented by age group *i* |
+| Crude rate | `cruderate` | `r_i = D_i / P_i` | Age-specific IBM rate |
+| Age-adjusted rate | `aarate_x–y` | `R' = Σ w_i r_i` | Weighted average of age-specific IBM rates |
 
 
 Adjustments for small sample sizes can be made using:
@@ -67,15 +84,7 @@ The **Rate Ratio (RR)** compares the IBM rates between two groups — for exampl
 
 
 ## 🔗 References
-- **Age-adjusted rate confidence intervals (SEER Documentation):**  
-  [SEER Rate Algorithms](https://seer.cancer.gov/help/seerstat/equations-and-algorithms/rate-algorithms)
-
-- **Rate Ratio Methods:**  
-  Fay, M. P. (1999). *Approximate confidence intervals for rate ratios from directly standardized rates with sparse data.*  
-  *Communications in Statistics: Theory and Methods*, **28**(9), 2141–2160.  
-
-  Fay, M. P., Tiwari, R. C., Feuer, E. J., & Zou, Z. (2006). *Estimating average annual percent change for disease rates without assuming constant change.*
-   *Biometrics*, **62**(3), 847–854.
+- **[Age-adjusted rate confidence intervals (SEER Documentation)](https://seer.cancer.gov/help/seerstat/equations-and-algorithms/rate-algorithms)**  
 
 ---
 
@@ -132,7 +141,7 @@ res_ff$rr_of_dsrs  # RR and CI comparing the two groups
 | **Field** | **Description** |
 |------------|----------------|
 | `Rate_per1e5` | Age-adjusted Incidence-Based Mortality (IBM) rate per 100,000 persons |
-| `CI_low` / `CI_high` | 95% confidence interval limits |
+| `CI_low`, `CI_high` | 95% confidence interval limits |
 | Interpretation | Higher values indicate a greater mortality burden among incident cancer cases |
 
 
@@ -142,7 +151,7 @@ res_ff$rr_of_dsrs  # RR and CI comparing the two groups
 | **Field** | **Description** |
 |------------|----------------|
 | `Estimate` | Rate Ratio (RR) = (IBM rate of Group 2) / (IBM rate of Group 1) |
-| `CI_low` / `CI_high` | 95% confidence interval for the RR |
+| `CI_low`, `CI_high` | 95% confidence interval for the RR |
 
 ---
 
