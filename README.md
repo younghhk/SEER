@@ -46,9 +46,9 @@ w_i=\frac{\mathrm{stdpop}_i}{\sum_{j=x}^{y}\mathrm{stdpop}_j}
 $$
 
 **Where:**
-- \(D_i\): deaths among incident cancer cases in age group \(i\)  
-- \(P_i\): person-years among those incident cases in age group \(i\)  
-- \(w_i\): normalized standard-population weight for age group \(i\)
+- $D_i$: deaths among incident cancer cases in age group \(i\)  
+- $P_i$: person-years among those incident cases in age group \(i\)  
+- $w_i$: normalized standard-population weight for age group \(i\)
 
 
 | Concept | SEER Notation | IBM Notation | Description |
